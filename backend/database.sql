@@ -45,5 +45,6 @@ CREATE TABLE IF NOT EXISTS hub (
   notes VARCHAR,
   manufacturer VARCHAR,
   model_name VARCHAR,
+  spoke_hole_diameter SMALLINT,
   date_created TIMESTAMPTZ
 )
