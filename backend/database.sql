@@ -63,3 +63,33 @@ CREATE TABLE IF NOT EXISTS hub (
   CONSTRAINT positive_dimensions CHECK(spacing > 0 AND flange_pcd_nds > 0 AND flange_pcd_ds > 0 AND center_to_left > 0 AND center_to_right > 0 AND spoke_hole_diameter > 0),
   CONSTRAINT no_front_driver CHECK((side = 'front' AND driver IS NULL) OR (side = 'rear'))
 );
+
+-- Triggers to prevent wheels from being made with hole mismatched rim and hubs and to prevent Updates from affecting that.
+CREATE FUNCTION check_wheel_holes()
+  RETURNS trigger AS $check_wheel_holes$
+    DECLARE
+      hub_holes SMALLINT;
+      rim_holes SMALLINT;
+    BEGIN
+      SELECT hub.hole_count 
+        INTO hub_holes 
+        FROM hub
+        WHERE NEW.hub_id = hub.id;
+
+      SELECT rim.hole_count 
+        INTO rim_holes 
+        FROM rim
+        WHERE NEW.rim_id = rim.id;
+      
+      IF hub_holes != rim_holes THEN
+        RAISE EXCEPTION 'rim and hub must have equal hole counts. % and % respectively', rim_holes, hub_holes;
+      END IF;
+
+      RETURN NEW;
+    END; 
+$check_wheel_holes$ LANGUAGE plpgsql;
+
+-- Bind trigger to table
+CREATE TRIGGER wheel_holes_must_match
+BEFORE INSERT OR UPDATE ON wheel
+  FOR EACH ROW EXECUTE PROCEDURE check_wheel_holes();
