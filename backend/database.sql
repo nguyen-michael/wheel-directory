@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS hub (
   CONSTRAINT no_front_driver CHECK((side = 'front' AND driver IS NULL) OR (side = 'rear'))
 );
 
--- Triggers to prevent wheels from being made with hole mismatched rim and hubs and to prevent Updates from affecting that.
+-- Function to prevent wheels from being made with hole mismatched rim and hubs
 CREATE FUNCTION check_wheel_holes()
   RETURNS trigger AS $check_wheel_holes$
     DECLARE
@@ -89,7 +89,40 @@ CREATE FUNCTION check_wheel_holes()
     END; 
 $check_wheel_holes$ LANGUAGE plpgsql;
 
+-- Functions to check if rim or hub is referenced in a wheel row. Prevent update of hole_count if so.
+CREATE FUNCTION prevent_hole_count_update_rim_if_referenced()
+  RETURNS trigger AS $prevent_hole_count_update_rim_if_referenced$
+    BEGIN
+      -- if Hole count is being changed AND it's referenced in a wheel, raise exception otherwise carry on.
+      IF (EXISTS (SELECT wheel.id FROM wheel WHERE OLD.id = wheel.rim_id) AND NEW.hole_count != OLD.hole_count) THEN
+        RAISE EXCEPTION 'rim currently used in wheel, cannot change hole count.';
+      END IF;
+
+      RETURN NEW;
+    END;
+$prevent_hole_count_update_rim_if_referenced$ LANGUAGE plpgsql;
+
+CREATE FUNCTION prevent_hole_count_update_hub_if_referenced()
+  RETURNS trigger AS $prevent_hole_count_update_hub_if_referenced$
+    BEGIN
+      -- if Hole count is being changed AND it's referenced in a wheel, raise exception otherwise carry on.
+      IF (EXISTS (SELECT wheel.id FROM wheel WHERE OLD.id = wheel.hub_id) AND NEW.hole_count != OLD.hole_count) THEN
+        RAISE EXCEPTION 'hub currently used in wheel, cannot change hole count.';
+      END IF;
+
+      RETURN NEW;
+    END;
+$prevent_hole_count_update_hub_if_referenced$ LANGUAGE plpgsql;
+
 -- Bind trigger to table
 CREATE TRIGGER wheel_holes_must_match
 BEFORE INSERT OR UPDATE ON wheel
   FOR EACH ROW EXECUTE PROCEDURE check_wheel_holes();
+
+CREATE TRIGGER rim_hole_count_cannot_update_if_in_wheel
+BEFORE UPDATE ON rim
+  FOR EACH ROW EXECUTE PROCEDURE prevent_hole_count_update_rim_if_referenced();
+
+CREATE TRIGGER hub_hole_count_cannot_update_if_in_wheel
+BEFORE UPDATE ON hub
+  FOR EACH ROW EXECUTE PROCEDURE prevent_hole_count_update_hub_if_referenced();
