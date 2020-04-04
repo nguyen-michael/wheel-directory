@@ -13,8 +13,10 @@ CREATE TABLE IF NOT EXISTS wheel (
   web_url VARCHAR,
   notes VARCHAR,
   date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT cross_between_0_and_5 CHECK(cross_pattern_nds BETWEEN 0 AND 5 AND cross_pattern_ds BETWEEN 0 AND 5),
-  CONSTRAINT positive_lengths CHECK(spoke_length_nds > 0 AND spoke_length_ds > 0)
+  CONSTRAINT positive_lengths CHECK(spoke_length_nds > 0 AND spoke_length_ds > 0),
+  CONSTRAINT unique_wheel UNIQUE (rim_id, hub_id, cross_pattern_ds, cross_pattern_nds)
 );
 -- Rim
 -- Can add features like Weights later
@@ -38,7 +40,9 @@ CREATE TABLE IF NOT EXISTS rim (
   rider_weight_limit REAL,
   web_url VARCHAR,
   notes VARCHAR,
-  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT unique_rim UNIQUE (manufacturer, model_name, iso_diameter, erd, hole_count, offset_spoke_bed, tubeless_compatible, rim_brake, material)
 );
 -- Hub
 CREATE TABLE IF NOT EXISTS hub (
@@ -60,8 +64,10 @@ CREATE TABLE IF NOT EXISTS hub (
   web_url VARCHAR,
   notes VARCHAR,
   date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT positive_dimensions CHECK(spacing > 0 AND flange_pcd_nds > 0 AND flange_pcd_ds > 0 AND center_to_left > 0 AND center_to_right > 0 AND spoke_hole_diameter > 0),
-  CONSTRAINT no_front_driver CHECK((side = 'front' AND driver IS NULL) OR (side = 'rear'))
+  CONSTRAINT no_front_driver CHECK((side = 'front' AND driver IS NULL) OR (side = 'rear')),
+  CONSTRAINT unique_hub UNIQUE (manufacturer, model_name, side, spacing, hole_count, driver, brake, boost)
 );
 
 -- Function to prevent wheels from being made with hole mismatched rim and hubs
@@ -88,6 +94,15 @@ CREATE FUNCTION check_wheel_holes()
       RETURN NEW;
     END; 
 $check_wheel_holes$ LANGUAGE plpgsql;
+
+-- Function to add updated timestamp on operation.
+CREATE FUNCTION update_date_updated()
+  RETURNS trigger AS $update_date_updated$
+    BEGIN 
+      NEW.date_updated = NOW();
+      RETURN NEW;
+    END;
+$update_date_updated$ LANGUAGE plpgsql;
 
 -- Functions to check if rim or hub is referenced in a wheel row. Prevent update of hole_count if so.
 -- if Hole count is being changed AND it's referenced in a wheel, raise exception otherwise carry on.
@@ -126,3 +141,15 @@ BEFORE UPDATE ON rim
 CREATE TRIGGER hub_hole_count_cannot_update_if_in_wheel
 BEFORE UPDATE ON hub
   FOR EACH ROW EXECUTE PROCEDURE prevent_hole_count_update_hub_if_referenced();
+
+CREATE TRIGGER update_date_updated
+BEFORE INSERT OR UPDATE ON wheel
+  FOR EACH ROW EXECUTE PROCEDURE update_date_updated();
+
+CREATE TRIGGER update_date_updated
+BEFORE INSERT OR UPDATE ON rim
+  FOR EACH ROW EXECUTE PROCEDURE update_date_updated();
+
+CREATE TRIGGER update_date_updated
+BEFORE INSERT OR UPDATE ON hub
+  FOR EACH ROW EXECUTE PROCEDURE update_date_updated();
