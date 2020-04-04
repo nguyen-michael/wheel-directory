@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS hub (
   CONSTRAINT unique_hub UNIQUE (manufacturer, model_name, side, over_locknut_distance, hole_count, spoke_interface, driver, brake, boost),
   CONSTRAINT positive_dimensions CHECK(over_locknut_distance > 0 AND flange_pcd_nds > 0 AND flange_pcd_ds > 0 AND center_to_left > 0 AND center_to_right > 0 AND spoke_hole_diameter > 0 AND points_of_engagement > 0),
   CONSTRAINT no_front_driver CHECK((side = 'Front' AND driver = 'No Driver (Front)') OR (side = 'Rear' AND driver != 'No Driver (Front)')),
-  CONSTRAINT no_front_points_of_engagement CHECK(side = 'Front' AND points_of_engagement IS NULL);
+  CONSTRAINT no_front_points_of_engagement CHECK(side = 'Front' AND points_of_engagement IS NULL),
   CONSTRAINT front_or_rear CHECK(side IN ('Front', 'Rear')),
   CONSTRAINT possible_hole_counts CHECK(hole_count IN (8, 12, 16, 18, 20, 24, 28, 32, 36, 40, 48, 72, 144)),
   CONSTRAINT driver_type CHECK(driver IN ('No Driver (Front)', 'XD', 'Hyperglide 8/9/10 Speed', 'Hyperglide 11 Speed', 'Hyperglide 7 Speed', 'Hyperglide Singlespeed', 'XDR', 'Microspline', 'Uniglide', 'Helicomatic', 'Freewheel ISO', 'Freewheel M30', 'Fixed', 'Flipflop FW/FX', 'Flipflop FW/FW', 'Flipflop FX/FX', 'Proprietary/Other', 'Campagnolo 7/8 Speed', 'Campagnolo 9/10/11/12 Speed', 'Internal Gear 2 Speed', 'Internal Gear 3 Speed', 'Internal Gear 4 Speed', 'Internal Gear 5 Speed', 'Internal Gear 7 Speed', 'Internal Gear 8 Speed', 'Internal Gear 9 Speed', 'Internal Gear 11 Speed', 'Internal Gear 12 Speed', 'Internal Gear 14 Speed', 'Internal Gear Continuously Variable Transmisson')),
@@ -174,3 +174,32 @@ BEFORE INSERT OR UPDATE ON rim
 CREATE TRIGGER update_date_updated
 BEFORE INSERT OR UPDATE ON hub
   FOR EACH ROW EXECUTE PROCEDURE update_date_updated();
+
+-- Table and Column descriptions
+COMMENT ON TABLE wheel IS 'Wheels as collection of hub, rim and spoke crossing combinations';
+COMMENT ON TABLE rim IS 'Rim specifications';
+COMMENT ON TABLE hub IS 'Hub specifications';
+
+COMMENT ON COLUMN wheel.spoke_length_nds IS 'millimeters (mm)';
+COMMENT ON COLUMN wheel.spoke_length_ds IS 'millimeters (mm)';
+
+COMMENT ON COLUMN rim.iso_diameter IS 'millimeters (mm)';
+COMMENT ON COLUMN rim.erd IS 'millimeters (mm)';
+COMMENT ON COLUMN rim.offset_spoke_bed IS 'millimeters (mm)';
+COMMENT ON COLUMN rim.inner_width IS 'millimeters (mm)';
+COMMENT ON COLUMN rim.outer_width IS 'millimeters (mm)';
+COMMENT ON COLUMN rim.depth IS 'millimeters (mm)';
+COMMENT ON COLUMN rim.max_spoke_tension IS 'Newtons (N)';
+COMMENT ON COLUMN rim.max_tire_pressure IS 'pounds per square-inch (PSI)';
+COMMENT ON COLUMN rim.max_rider_weight IS 'pounds (lbs)';
+COMMENT ON COLUMN rim.weight IS 'grams (g)';
+
+COMMENT ON COLUMN hub.flange_pcd_nds IS 'millimeters (mm)';
+COMMENT ON COLUMN hub.flange_pcd_ds IS 'millimeters (mm)';
+COMMENT ON COLUMN hub.center_to_left IS 'millimeters (mm)';
+COMMENT ON COLUMN hub.center_to_right IS 'millimeters (mm)';
+COMMENT ON COLUMN hub.over_locknut_distance IS 'millimeters (mm)';
+COMMENT ON COLUMN hub.spoke_hole_diameter IS 'millimeters (mm)';
+COMMENT ON COLUMN hub.points_of_engagement IS 'real data-type used to support infinity';
+COMMENT ON COLUMN hub.weight IS 'grams (g)';
+
