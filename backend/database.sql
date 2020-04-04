@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS hub (
   CONSTRAINT unique_hub UNIQUE (manufacturer, model_name, side, over_locknut_distance, hole_count, spoke_interface, driver, brake, boost),
   CONSTRAINT positive_dimensions CHECK(over_locknut_distance > 0 AND flange_pcd_nds > 0 AND flange_pcd_ds > 0 AND center_to_left > 0 AND center_to_right > 0 AND spoke_hole_diameter > 0 AND points_of_engagement > 0),
   CONSTRAINT no_front_driver CHECK((side = 'Front' AND driver = 'No Driver (Front)') OR (side = 'Rear' AND driver != 'No Driver (Front)')),
-  CONSTRAINT no_front_points_of_engagement CHECK(side = 'Front' AND points_of_engagement IS NULL),
+  CONSTRAINT no_front_points_of_engagement CHECK((side = 'Front' AND points_of_engagement IS NULL) OR (side = 'Rear')),
   CONSTRAINT front_or_rear CHECK(side IN ('Front', 'Rear')),
   CONSTRAINT possible_hole_counts CHECK(hole_count IN (8, 12, 16, 18, 20, 24, 28, 32, 36, 40, 48, 72, 144)),
   CONSTRAINT driver_type CHECK(driver IN ('No Driver (Front)', 'XD', 'Hyperglide 8/9/10 Speed', 'Hyperglide 11 Speed', 'Hyperglide 7 Speed', 'Hyperglide Singlespeed', 'XDR', 'Microspline', 'Uniglide', 'Helicomatic', 'Freewheel ISO', 'Freewheel M30', 'Fixed', 'Flipflop FW/FX', 'Flipflop FW/FW', 'Flipflop FX/FX', 'Proprietary/Other', 'Campagnolo 7/8 Speed', 'Campagnolo 9/10/11/12 Speed', 'Internal Gear 2 Speed', 'Internal Gear 3 Speed', 'Internal Gear 4 Speed', 'Internal Gear 5 Speed', 'Internal Gear 7 Speed', 'Internal Gear 8 Speed', 'Internal Gear 9 Speed', 'Internal Gear 11 Speed', 'Internal Gear 12 Speed', 'Internal Gear 14 Speed', 'Internal Gear Continuously Variable Transmisson')),
