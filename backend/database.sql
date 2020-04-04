@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS wheel (
   notes VARCHAR,
   date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT unique_wheel UNIQUE (rim_id, hub_id, cross_pattern_nds, cross_pattern_ds),
   CONSTRAINT cross_between_0_and_5 CHECK(cross_pattern_nds BETWEEN 0 AND 5 AND cross_pattern_ds BETWEEN 0 AND 5),
-  CONSTRAINT positive_lengths CHECK(spoke_length_nds > 0 AND spoke_length_ds > 0),
-  CONSTRAINT unique_wheel UNIQUE (rim_id, hub_id, cross_pattern_nds, cross_pattern_ds)
+  CONSTRAINT positive_lengths CHECK(spoke_length_nds > 0 AND spoke_length_ds > 0)
 );
 -- Rim
 -- Can add features like Weights later
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS rim (
   outer_width REAL,
   depth REAL,
   material VARCHAR,
-  max_tension REAL,
-  max_psi REAL,
+  max_spoke_tension REAL,
+  max_tire_pressure REAL,
   weight REAL,
-  rider_weight_limit REAL,
+  max_rider_weight REAL,
   eyelet VARCHAR,
   web_url VARCHAR,
   notes VARCHAR,
@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS rim (
   CONSTRAINT possible_hole_counts CHECK(hole_count IN (8, 12, 16, 18, 20, 24, 28, 32, 36, 40, 48, 72, 144)),
   CONSTRAINT non_negative_offset CHECK(offset_spoke_bed >= 0),
   CONSTRAINT positive_erd_less_than_iso_diameter CHECK(erd > 0 AND erd <= iso_diameter),
-  CONSTRAINT tire_types CHECK(tire_type IN ('Tubeless', 'Clincher', 'Tubular'))
+  CONSTRAINT tire_types CHECK(tire_type IN ('Tubeless', 'Clincher', 'Tubular')),
+  CONSTRAINT positive_quality_values CHECK(inner_width > 0 AND outer_width > 0 AND depth > 0 AND max_spoke_tension > 0 AND max_tire_pressure > 0 AND max_rider_weight > 0)
 );
 -- Hub
 CREATE TABLE IF NOT EXISTS hub (
@@ -69,23 +70,25 @@ CREATE TABLE IF NOT EXISTS hub (
   boost VARCHAR NOT NULL,
   axle_type VARCHAR,
   convertible BOOLEAN,
+  points_of_engagement REAL,
   dynamo BOOLEAN,
   weight REAL,
   web_url VARCHAR,
   notes VARCHAR,
   date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT positive_dimensions CHECK(over_locknut_distance > 0 AND flange_pcd_nds > 0 AND flange_pcd_ds > 0 AND center_to_left > 0 AND center_to_right > 0 AND spoke_hole_diameter > 0),
-  CONSTRAINT no_front_driver CHECK((side = 'front' AND driver = 'No Driver (front)') OR (side = 'rear' AND driver != 'No Driver (front)')),
   CONSTRAINT unique_hub UNIQUE (manufacturer, model_name, side, over_locknut_distance, hole_count, spoke_interface, driver, brake, boost),
-  CONSTRAINT front_or_rear CHECK(side IN ('front', 'rear')),
+  CONSTRAINT positive_dimensions CHECK(over_locknut_distance > 0 AND flange_pcd_nds > 0 AND flange_pcd_ds > 0 AND center_to_left > 0 AND center_to_right > 0 AND spoke_hole_diameter > 0 AND points_of_engagement > 0),
+  CONSTRAINT no_front_driver CHECK((side = 'Front' AND driver = 'No Driver (Front)') OR (side = 'Rear' AND driver != 'No Driver (Front)')),
+  CONSTRAINT no_front_points_of_engagement CHECK(side = 'Front' AND points_of_engagement IS NULL);
+  CONSTRAINT front_or_rear CHECK(side IN ('Front', 'Rear')),
   CONSTRAINT possible_hole_counts CHECK(hole_count IN (8, 12, 16, 18, 20, 24, 28, 32, 36, 40, 48, 72, 144)),
-  CONSTRAINT driver_type CHECK(driver IN ('No Driver (front)', 'XD', 'Hyperglide 8/9/10 Speed', 'Hyperglide 11 Speed', 'Hyperglide 7 Speed', 'Hyperglide Singlespeed', 'XDR', 'Microspline', 'Uniglide', 'Helicomatic', 'Freewheel ISO', 'Freewheel M30', 'Fixed', 'Flipflop FW/FX', 'Flipflop FW/FW', 'Flipflop FX/FX', 'Proprietary/Other', 'Campagnolo 7/8 Speed', 'Campagnolo 9/10/11/12 Speed', 'Internal Gear 2 Speed', 'Internal Gear 3 Speed', 'Internal Gear 4 Speed', 'Internal Gear 5 Speed', 'Internal Gear 7 Speed', 'Internal Gear 8 Speed', 'Internal Gear 9 Speed', 'Internal Gear 11 Speed', 'Internal Gear 12 Speed', 'Internal Gear 14 Speed', 'Internal Gear Continuously Variable Transmisson')),
+  CONSTRAINT driver_type CHECK(driver IN ('No Driver (Front)', 'XD', 'Hyperglide 8/9/10 Speed', 'Hyperglide 11 Speed', 'Hyperglide 7 Speed', 'Hyperglide Singlespeed', 'XDR', 'Microspline', 'Uniglide', 'Helicomatic', 'Freewheel ISO', 'Freewheel M30', 'Fixed', 'Flipflop FW/FX', 'Flipflop FW/FW', 'Flipflop FX/FX', 'Proprietary/Other', 'Campagnolo 7/8 Speed', 'Campagnolo 9/10/11/12 Speed', 'Internal Gear 2 Speed', 'Internal Gear 3 Speed', 'Internal Gear 4 Speed', 'Internal Gear 5 Speed', 'Internal Gear 7 Speed', 'Internal Gear 8 Speed', 'Internal Gear 9 Speed', 'Internal Gear 11 Speed', 'Internal Gear 12 Speed', 'Internal Gear 14 Speed', 'Internal Gear Continuously Variable Transmisson')),
   CONSTRAINT brake_type CHECK(brake IN ('Rim', '6-Bolt', 'Centerlock', 'Drum', 'Roller', 'Coaster', 'Rohloff', '3-Bolt')),
-  CONSTRAINT boost_type CHECK(boost IN ('Non-boost', 'Boost', 'Superboost')),
+  CONSTRAINT boost_type CHECK(boost IN ('Non-Boost', 'Boost', 'Superboost')),
   CONSTRAINT possible_spoke_interfaces CHECK(spoke_interface IN ('J-Bend', 'Straight Pull', 'Proprietary/Other')),
   CONSTRAINT possible_over_locknut_distances CHECK(over_locknut_distance IN (74, 100, 110, 112, 116, 120, 122, 126, 130, 132.5, 135, 141, 142, 148, 150, 157, 170, 177, 190, 197)),
-  CONSTRAINT possible_axle_types CHECK(axle_type IN ('Quick Release', 'Bolt-On / Nutted', 'Thru-axle 15mm', 'Thru-axle 12mm', 'Thru-axle 20mm', 'Lefty'))
+  CONSTRAINT possible_axle_types CHECK(axle_type IN ('Quick Release', 'Bolt-On / Nutted', 'Thru-Axle 15mm', 'Thru-Axle 12mm', 'Thru-Axle 20mm', 'Lefty'))
 );
 
 -- Function to prevent wheels from being made with hole mismatched rim and hubs
