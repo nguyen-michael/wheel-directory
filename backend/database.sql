@@ -1,25 +1,5 @@
 CREATE DATABASE wheel_directory;
--- Wheel, a Rim and Hub Combination
--- We can add more features later, like spokes, weight, nipples.
-CREATE TABLE IF NOT EXISTS wheel (
-  id SERIAL PRIMARY KEY,
-  rim_id INT REFERENCES rim(id),
-  hub_id INT REFERENCES hub(id),
-  cross_pattern_nds SMALLINT NOT NULL,
-  cross_pattern_ds SMALLINT NOT NULL,
-  spoke_length_nds REAL,
-  spoke_length_ds REAL,
-  stock_id VARCHAR,
-  web_url VARCHAR,
-  notes VARCHAR,
-  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-  date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT unique_wheel UNIQUE (rim_id, hub_id, cross_pattern_nds, cross_pattern_ds),
-  CONSTRAINT cross_between_0_and_5 CHECK(cross_pattern_nds BETWEEN 0 AND 5 AND cross_pattern_ds BETWEEN 0 AND 5),
-  CONSTRAINT positive_lengths CHECK(spoke_length_nds > 0 AND spoke_length_ds > 0)
-);
 -- Rim
--- Can add features like Weights later
 CREATE TABLE IF NOT EXISTS rim (
   id SERIAL PRIMARY KEY,
   manufacturer VARCHAR NOT NULL,
@@ -90,7 +70,24 @@ CREATE TABLE IF NOT EXISTS hub (
   CONSTRAINT possible_over_locknut_distances CHECK(over_locknut_distance IN (74, 100, 110, 112, 116, 120, 122, 126, 130, 132.5, 135, 141, 142, 148, 150, 157, 170, 177, 190, 197)),
   CONSTRAINT possible_axle_types CHECK(axle_type IN ('Quick Release', 'Bolt-On / Nutted', 'Thru-Axle 15mm', 'Thru-Axle 12mm', 'Thru-Axle 20mm', 'Lefty'))
 );
-
+-- Wheel, a Rim and Hub Combination
+CREATE TABLE IF NOT EXISTS wheel (
+  id SERIAL PRIMARY KEY,
+  rim_id INT REFERENCES rim(id) NOT NULL,
+  hub_id INT REFERENCES hub(id) NOT NULL,
+  cross_pattern_nds SMALLINT NOT NULL,
+  cross_pattern_ds SMALLINT NOT NULL,
+  spoke_length_nds REAL,
+  spoke_length_ds REAL,
+  stock_id VARCHAR,
+  web_url VARCHAR,
+  notes VARCHAR,
+  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  date_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT unique_wheel UNIQUE (rim_id, hub_id, cross_pattern_nds, cross_pattern_ds),
+  CONSTRAINT cross_between_0_and_5 CHECK(cross_pattern_nds BETWEEN 0 AND 5 AND cross_pattern_ds BETWEEN 0 AND 5),
+  CONSTRAINT positive_lengths CHECK(spoke_length_nds > 0 AND spoke_length_ds > 0)
+);
 -- Function to prevent wheels from being made with hole mismatched rim and hubs
 CREATE FUNCTION check_wheel_holes()
   RETURNS trigger AS $check_wheel_holes$
