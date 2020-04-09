@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Wheel Directory",
+  "name": "Collection of Hub, Rims and Wheels for wheelbuilders' reference",
   "icons": [
     {
       "src": "favicon.ico",
