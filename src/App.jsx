@@ -1,9 +1,11 @@
 import React from 'react';
+import SpokeCalculator from './components/SpokeCalculator';
 
 function App() {
   return (
     <div className="App">
-      Web page :)
+      APP COMPONENT
+      <SpokeCalculator />
     </div>
   );
 }
