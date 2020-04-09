@@ -11,6 +11,9 @@
 # production
 /build
 
+# Dev Seed data
+/backend/database/seed_data
+
 # misc
 .DS_Store
 .env
