@@ -7,14 +7,16 @@ class SpokeCalculator extends Component {
         const possibleHoleCounts = [8, 12, 16, 18, 20, 24, 28, 32, 36, 40, 48, 72, 144];
         return (
             <div>
-                This is the SpokeCalculator Yay!
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdNds" label="Non Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdNds} min="1" />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdDs" label="Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdDs} min="1" />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToLeft" label="Center to Left Flange" value={this.props.spokeCalcCenterToLeft} min="1" />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToRight" label="Center to Right Flange " value={this.props.spokeCalcCenterToRight} min="1" />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcSpokeHoleDiameter" label="Spoke Hole Diameter" value={this.props.spokeCalcSpokeHoleDiameter} min="1" step="0.1" />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcERD" label="ERD" value={this.props.spokeCalcERD} min="1" />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcOffsetSpokeBed" label="Offset Spoke Bed" value={this.props.spokeCalcOffsetSpokeBed} min="0" step="0.1"/>
+                <h1>
+                    This is the SpokeCalculator Yay!
+                </h1>
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdNds" label="Non Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdNds} min="1" />
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdDs" label="Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdDs} min="1" />
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToLeft" label="Center to Left Flange" value={this.props.spokeCalcCenterToLeft} min="1" />
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToRight" label="Center to Right Flange " value={this.props.spokeCalcCenterToRight} min="1" />
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcSpokeHoleDiameter" label="Spoke Hole Diameter" value={this.props.spokeCalcSpokeHoleDiameter} min="1" step="0.1" />
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcERD" label="ERD" value={this.props.spokeCalcERD} min="1" />
+                <NumericInput handleSubmit={this.props.handleSubmit} handleFormChange={this.props.handleFormChange} name="spokeCalcOffsetSpokeBed" label="Offset Spoke Bed" value={this.props.spokeCalcOffsetSpokeBed} min="0" step="0.1"/>
                 <Selector
                     handleFormChange={this.props.handleFormChange}
                     name="spokeCalcHoleCount"

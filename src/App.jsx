@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import NotFound from './components/NotFound';
+import Navbar from './components/Navbar';
 import SpokeCalculator from './components/SpokeCalculator';
 import spokeCalc from './spokeCalc';
 
@@ -23,6 +26,7 @@ class App extends Component {
 
         this.handleFormChange = this.handleFormChange.bind(this);
         this.updateSpokeCalculation = this.updateSpokeCalculation.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     updateSpokeCalculation() {
@@ -37,7 +41,7 @@ class App extends Component {
                 this.setState((state) => {
                     return { spokeCalcNdsCalculation: spokeCalc(state.spokeCalcERD, state.spokeCalcFlangePcdNds, parseFloat(state.spokeCalcCenterToLeft) - parseFloat(state.spokeCalcOffsetSpokeBed), state.spokeCalcCrossPatternNds, state.spokeCalcHoleCount, state.spokeCalcSpokeHoleDiameter) }
                 });
-            } else if ( this.state.spokeCalcOffsetDirection === "ds") {
+            } else if (this.state.spokeCalcOffsetDirection === "ds") {
                 this.setState((state) => {
                     return { spokeCalcNdsCalculation: spokeCalc(state.spokeCalcERD, state.spokeCalcFlangePcdNds, parseFloat(state.spokeCalcCenterToLeft) + parseFloat(state.spokeCalcOffsetSpokeBed), state.spokeCalcCrossPatternNds, state.spokeCalcHoleCount, state.spokeCalcSpokeHoleDiameter) }
                 });
@@ -72,11 +76,19 @@ class App extends Component {
         });
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+    }
+
     render() {
         return (
             <div className="App">
-                IMAGINARY NAVBAR :D
-                <SpokeCalculator handleFormChange={this.handleFormChange} {...this.state} updateSpokeCalculation={this.updateSpokeCalculation} />
+                <Navbar />
+                <Switch>
+                    <Route path="/" exact render={() => <h1>Imaginary Home Page</h1>} />
+                    <Route path="/calculator" render={() => <SpokeCalculator handleFormChange={this.handleFormChange} {...this.state} updateSpokeCalculation={this.updateSpokeCalculation} handleSubmit={this.handleSubmit} />} />
+                    <Route component={NotFound} />
+                </ Switch>
             </div>
         );
     }
