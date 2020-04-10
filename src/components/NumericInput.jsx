@@ -6,7 +6,7 @@ class NumericInput extends Component {
             <form>
                 <label htmlFor={this.props.name}>
                     {this.props.label}
-                    <input type="number" name={this.props.name} onChange={this.props.handleFormChange} value={this.props.value}/>
+                    <input type="number" name={this.props.name} onChange={this.props.handleFormChange} value={this.props.value} min={this.props.min} max={this.props.max} step={this.props.step} />
                 </label>
             </form>
         );

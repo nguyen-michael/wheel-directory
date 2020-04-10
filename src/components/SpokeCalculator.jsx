@@ -8,13 +8,13 @@ class SpokeCalculator extends Component {
         return (
             <div>
                 This is the SpokeCalculator Yay!
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdNds" label="Non Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdNds} />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdDs" label="Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdDs} />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToLeft" label="Center to Left Flange" value={this.props.spokeCalcCenterToLeft} />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToRight" label="Center to Right Flange " value={this.props.spokeCalcCenterToRight} />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcSpokeHoleDiameter" label="Spoke Hole Diameter" value={this.props.spokeCalcSpokeHoleDiameter} />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcERD" label="ERD" value={this.props.spokeCalcERD} />
-                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcOffsetSpokeBed" label="Offset Spoke Bed" value={this.props.spokeCalcOffsetSpokeBed} />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdNds" label="Non Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdNds} min="1" />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcFlangePcdDs" label="Drive Side Flange PCD" value={this.props.spokeCalcFlangePcdDs} min="1" />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToLeft" label="Center to Left Flange" value={this.props.spokeCalcCenterToLeft} min="1" />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcCenterToRight" label="Center to Right Flange " value={this.props.spokeCalcCenterToRight} min="1" />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcSpokeHoleDiameter" label="Spoke Hole Diameter" value={this.props.spokeCalcSpokeHoleDiameter} min="1" step="0.1" />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcERD" label="ERD" value={this.props.spokeCalcERD} min="1" />
+                <NumericInput handleFormChange={this.props.handleFormChange} name="spokeCalcOffsetSpokeBed" label="Offset Spoke Bed" value={this.props.spokeCalcOffsetSpokeBed} min="0" step="0.1"/>
                 <Selector
                     handleFormChange={this.props.handleFormChange}
                     name="spokeCalcHoleCount"
@@ -39,7 +39,7 @@ class SpokeCalculator extends Component {
                         checked={this.props.spokeCalcOffsetDirection === "ds"}
                         onChange={this.props.handleFormChange}
                     />
-                    <label htmlFor="spokeCalcCrossPatternNds">To Drive Side</label>
+                    <label htmlFor="spokeCalcOffsetDirection">To Drive Side</label>
                 </form>
                 <form>
                     <label>Cross Pattern Non Drive Side</label>
@@ -143,8 +143,9 @@ class SpokeCalculator extends Component {
                     />
                     <label htmlFor="spokeCalcCrossPatternDs">5</label>
                 </form>
+                <button onClick={this.props.updateSpokeCalculation}>Calculate!</button>
                 <div>
-                    RESULTS: Non Drive Side: {this.props.spokeCalcNdsCalculation} , Drive Side: {this.props.spokeCalcDsCalculation} 
+                    RESULTS: Non Drive Side: {Math.round(this.props.spokeCalcNdsCalculation * 100) / 100} , Drive Side: {Math.round(this.props.spokeCalcDsCalculation * 100) / 100}
                 </div>
             </div>
         );
