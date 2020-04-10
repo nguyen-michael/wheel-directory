@@ -9,8 +9,8 @@ class Selector extends Component {
         return (
             <div>
                 <label htmlFor={this.props.name}>
-                    {this.props.name}
-                    <select name={this.props.name} id={this.props.name} value={this.props.spokeCalcHoleCount} onChange={this.props.handleFormChange}>
+                    {this.props.label}
+                    <select name={this.props.name} id={this.props.name} value={this.props.value} onChange={this.props.handleFormChange}>
                         {options}
                     </select>
                 </label>
