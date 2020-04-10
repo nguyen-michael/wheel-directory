@@ -34,8 +34,8 @@ class App extends Component {
             && this.state.spokeCalcERD > 0
             && this.state.spokeCalcOffsetSpokeBed >= 0
         ) {
-            this.setState({
-                spokeCalcNdsCalculation: spokeCalc(this.state.spokeCalcERD, this.state.spokeCalcFlangePcdNds, this.state.spokeCalcCenterToLeft, this.state.spokeCalcCrossPatternNds, this.state.spokeCalcHoleCount, this.state.spokeCalcSpokeHoleDiameter)
+            this.setState((state) => {
+                return {spokeCalcNdsCalculation: spokeCalc(state.spokeCalcERD, state.spokeCalcFlangePcdNds, state.spokeCalcCenterToLeft, state.spokeCalcCrossPatternNds, state.spokeCalcHoleCount, state.spokeCalcSpokeHoleDiameter)}
             });
         }
 
@@ -46,8 +46,8 @@ class App extends Component {
             && this.state.spokeCalcERD > 0
             && this.state.spokeCalcOffsetSpokeBed >= 0
         ) {
-            this.setState({
-                spokeCalcDsCalculation: spokeCalc(this.state.spokeCalcERD, this.state.spokeCalcFlangePcdDs, this.state.spokeCalcCenterToRight, this.state.spokeCalcCrossPatternDs, this.state.spokeCalcHoleCount, this.state.spokeCalcSpokeHoleDiameter)
+            this.setState((state) => {
+                return {spokeCalcDsCalculation: spokeCalc(state.spokeCalcERD, state.spokeCalcFlangePcdDs, state.spokeCalcCenterToRight, state.spokeCalcCrossPatternDs, state.spokeCalcHoleCount, state.spokeCalcSpokeHoleDiameter)}
             });
         }
     }
