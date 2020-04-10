@@ -144,7 +144,7 @@ class SpokeCalculator extends Component {
                     <label htmlFor="spokeCalcCrossPatternDs">5</label>
                 </form>
                 <div>
-                    RESULTS: Non Drive Side: , Drive Side: 
+                    RESULTS: Non Drive Side: {this.props.spokeCalcNdsCalculation} , Drive Side: {this.props.spokeCalcDsCalculation} 
                 </div>
             </div>
         );

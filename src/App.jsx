@@ -18,21 +18,15 @@ class App extends Component {
             spokeCalcOffsetSpokeBed: "0",
             spokeCalcOffsetDirection: "nds",
             spokeCalcNdsCalculation: "",
-            spokeCalcDsCalculation: this.updateSpokeCalculation()
+            spokeCalcDsCalculation: ""
         }
 
         this.handleFormChange = this.handleFormChange.bind(this);
         this.updateSpokeCalculation = this.updateSpokeCalculation.bind(this);
     }
 
-/*     componentDidUpdate(prevProps, prevState) {
-        // Update Spoke Calculation 
-        // Will need to factor in offset
-        // Cureently causes infinite loop. Figure out a place to update the state for spoke calculation
-
-        // This will not work because objects are references
-        const stateChanged = this.state !== prevState;
-
+    // This functions but it  seems to be "off" by a cycle and doesn't quite update on the spot. Maybe have a submit button, also prevent default on enter.
+    updateSpokeCalculation() {
         if (
             this.state.spokeCalcFlangePcdNds > 0
             && this.state.spokeCalcCenterToLeft > 0
@@ -53,13 +47,9 @@ class App extends Component {
             && this.state.spokeCalcOffsetSpokeBed >= 0
         ) {
             this.setState({
-                spokeCalcNdsCalculation: spokeCalc(this.state.spokeCalcERD, this.state.spokeCalcFlangePcdDs, this.state.spokeCalcCenterToRight, this.state.spokeCalcCrossPatternDs, this.state.spokeCalcHoleCount, this.state.spokeCalcSpokeHoleDiameter)
+                spokeCalcDsCalculation: spokeCalc(this.state.spokeCalcERD, this.state.spokeCalcFlangePcdDs, this.state.spokeCalcCenterToRight, this.state.spokeCalcCrossPatternDs, this.state.spokeCalcHoleCount, this.state.spokeCalcSpokeHoleDiameter)
             });
         }
-    } */
-
-    updateSpokeCalculation() {
-        return spokeCalc(600, 50, 35, this.state.spokeCalcCrossPatternNds, 28, 2.6)
     }
 
     handleFormChange(e) {
@@ -81,10 +71,15 @@ class App extends Component {
                         [e.target.name]: e.target.value
                     });
                 } */
-
         this.setState({
             [e.target.name]: e.target.value
         });
+
+        // Update the spoke calculations if a SpokeCalculator child was changed
+        if (e.target.name.includes("spokeCalc")) {
+            this.updateSpokeCalculation();
+        }
+
 
     }
 
