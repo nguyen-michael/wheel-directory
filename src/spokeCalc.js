@@ -11,4 +11,6 @@ function spokeLengthCalculator(erd, pcd, centerToFlange, crossPattern, numberSpo
     return spokeLength;
 }
 
-console.log(spokeLengthCalculator(600, 50, 35, 2, 28, 2.6), "expect 285.9240");
+// console.log(spokeLengthCalculator(600, 50, 35, 2, 28, 2.6), "expect 285.9240");
+
+export default spokeLengthCalculator;
