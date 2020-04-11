@@ -6,7 +6,7 @@ const { pool } = require("../dbConfig");
 // Get all wheels, rims and hubs.
 router.get("/wheels", async (req, res) => {
     try {
-        const results = await pool.query("SELECT * FROM wheel");
+        const results = await pool.query("SELECT rim.manufacturer, rim.model_name, hub.manufacturer, hub.model_name, hub.side, wheel.cross_pattern_nds, wheel.cross_pattern_nds FROM wheel INNER JOIN rim ON wheel.rim_id = rim.id INNER JOIN hub ON wheel.hub_id = hub.id");
         res.json(results.rows);
     } catch (err) {
         console.log(err.message);

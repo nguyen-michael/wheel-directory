@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { pool } = require('./dbConfig.js');
+// const { pool } = require('./dbConfig.js');
 const apiRoutes = require('./backend/apiRoutes');
 require("dotenv").config();
 
@@ -10,7 +10,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", apiRoutes);
 
-const PORT = process.env.PORT || 8000;
+// Change during dev to not conflict with react dev server
+// const PORT = process.env.PORT || 8000;
+const PORT = 8000;
 
 app.listen(PORT, () => {
     console.log(`Server up on port ${PORT}`);
