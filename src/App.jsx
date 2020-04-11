@@ -4,6 +4,7 @@ import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import SpokeCalculator from './components/SpokeCalculator';
 import spokeCalc from './spokeCalc';
+import WheelSearch from './components/WheelSearch';
 
 class App extends Component {
     constructor(props) {
@@ -87,6 +88,7 @@ class App extends Component {
                 <Switch>
                     <Route path="/" exact render={() => <h1>Imaginary Home Page</h1>} />
                     <Route path="/calculator" render={() => <SpokeCalculator handleFormChange={this.handleFormChange} {...this.state} updateSpokeCalculation={this.updateSpokeCalculation} handleSubmit={this.handleSubmit} />} />
+                    <Route path="/wheels" component={WheelSearch} />
                     <Route component={NotFound} />
                 </ Switch>
             </div>

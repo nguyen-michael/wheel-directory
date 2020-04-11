@@ -6,6 +6,7 @@ class Navbar extends Component {
         return (
             <div>
                 <Link to="/">Home</Link>
+                <Link to="/wheels">Wheel Search</Link>
                 <Link to="/calculator">Calculator</Link>
             </div>
         );
