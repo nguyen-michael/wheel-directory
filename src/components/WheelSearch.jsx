@@ -20,8 +20,7 @@ class WheelSearch extends Component {
                 <h1>
                     WHEEL SEARCH PAGE
                 </h1>
-                {/* Implement Loading/Wheel not found */}
-                <WheelSearchTable />
+                <WheelSearchTable wheelSearchData={this.props.wheelSearchData} />
             </div>
         );
     }
