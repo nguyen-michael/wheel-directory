@@ -46,7 +46,7 @@ class WheelSearchTable extends Component {
                     adjusted_ctr = center_to_right - offset_spoke_bed;
                 }
                 
-                //We can set hovers for auto or set lengths
+                //We can set hovers for auto or set lengths later
                 const displayedSpokeLengthNds = spoke_length_nds ? spoke_length_nds : Math.round(spokeCalc(erd, flange_pcd_nds, adjusted_ctl, cross_pattern_nds, hole_count, spoke_hole_diameter) * 100) / 100;
                 const displayedSpokeLengthDs = spoke_length_ds ? spoke_length_ds : Math.round(spokeCalc(erd, flange_pcd_ds, adjusted_ctr, cross_pattern_ds, hole_count, spoke_hole_diameter) * 100) / 100;
                 return (
