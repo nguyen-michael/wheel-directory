@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import ResultsTable from './ResultsTable';
+import WheelSearchTable from './WheelSearchTable';
 
 class WheelSearch extends Component {
+    // constructor(props) {
+    //     super(props);
+        
+    //     this.state = {
+
+    //     }
+    // }
+    
     componentDidMount() {
-        //  Gist of fetching data from API
-        async function getWheels() {
-            let response = await fetch(`/api/wheels`);
-            let data = await response.json()
-            return data;
-            // data is a promise
-        }
-        getWheels().then(data => console.log(data)).catch(err => console.log(err));
+        this.props.getDataFromApi("/api/wheels");
     }
 
     render() {
@@ -19,7 +20,8 @@ class WheelSearch extends Component {
                 <h1>
                     WHEEL SEARCH PAGE
                 </h1>
-                <ResultsTable />
+                {/* Implement Loading/Wheel not found */}
+                <WheelSearchTable />
             </div>
         );
     }
