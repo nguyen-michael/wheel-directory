@@ -26,7 +26,9 @@ class App extends Component {
             spokeCalcNdsCalculation: spokeCalc(606, 58, 34, 3, 32, 2.6),
             spokeCalcDsCalculation: spokeCalc(606, 58, 18, 3, 32, 2.6),
             wheelSearchData: "",
-            wheelSearchFields: ""
+            wheelSearchFields: "",
+            rimSearchData: "",
+            hubSearchData: ""
         }
 
         this.handleFormChange = this.handleFormChange.bind(this);
@@ -86,7 +88,7 @@ class App extends Component {
         e.preventDefault();
     }
 
-    getDataFromApi(route) {
+    getDataFromApi(route, name) {
         async function fetchData() {
             let response = await fetch(route);
             let data = await response.json()
@@ -95,17 +97,45 @@ class App extends Component {
             // Errors are handled in the catch below.
         }
         // Will set up switch here to handle what to do from different pages
-        fetchData()
-            .then(data => {
-                console.log(data);
-                // Use only name string
-                // const fields = data.fields.map(field => field.name);
-                this.setState({
-                    wheelSearchData: data.rows
-                    // wheelSearchFields: fields
-                });
-            })
-            .catch(err => console.log(err));
+        switch (name) {
+            case "WHEELS_INITIAL":
+                fetchData()
+                    .then(data => {
+                        console.log(data);
+                        // Use only name string
+                        // const fields = data.fields.map(field => field.name);
+                        this.setState({
+                            wheelSearchData: data.rows
+                            // wheelSearchFields: fields
+                        });
+                    })
+                    .catch(err => console.log(err));
+                break;
+            case "RIMS_INITIAL":
+                fetchData()
+                    .then(data => {
+                        console.log(data);
+                        this.setState({
+                            rimSearchData: data.rows
+                        });
+                    })
+                    .catch(err => console.log(err));
+                break;
+            case "HUBS_INITIAL":
+                fetchData()
+                    .then(data => {
+                        console.log(data);
+                        this.setState({
+                            hubSearchData: data.rows
+                        });
+                    })
+                    .catch(err => console.log(err));
+                break;
+            default:
+                console.log("Error: No data Api name provided.")
+                break;
+        }
+
     }
 
     render() {
@@ -116,8 +146,8 @@ class App extends Component {
                     <Route path="/" exact render={() => <h1>Imaginary Home Page</h1>} />
                     <Route path="/calculator" render={() => <SpokeCalculator {...this.state} handleFormChange={this.handleFormChange} updateSpokeCalculation={this.updateSpokeCalculation} handleSubmit={this.handleSubmit} />} />
                     <Route path="/wheels" render={() => <WheelSearch {...this.state} getDataFromApi={this.getDataFromApi} />} />
-                    <Route path="/rims" render={() => <RimSearch />} />
-                    <Route path="/hubs" render={() => <HubSearch />} />
+                    <Route path="/rims" render={() => <RimSearch {...this.state} getDataFromApi={this.getDataFromApi} />} />
+                    <Route path="/hubs" render={() => <HubSearch {...this.state} getDataFromApi={this.getDataFromApi} />} />
                     <Route component={NotFound} />
                 </ Switch>
             </div>

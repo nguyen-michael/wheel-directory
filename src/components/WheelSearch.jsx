@@ -2,16 +2,8 @@ import React, { Component } from 'react';
 import WheelSearchTable from './WheelSearchTable';
 
 class WheelSearch extends Component {
-    // constructor(props) {
-    //     super(props);
-        
-    //     this.state = {
-
-    //     }
-    // }
-    
     componentDidMount() {
-        this.props.getDataFromApi("/api/wheels");
+        this.props.getDataFromApi("/api/wheels", "WHEELS_INITIAL");
     }
 
     render() {
