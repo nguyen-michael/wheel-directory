@@ -3,7 +3,10 @@ import WheelSearchTable from './WheelSearchTable';
 
 class WheelSearch extends Component {
     componentDidMount() {
-        this.props.getDataFromApi("/api/wheels", "WHEELS_INITIAL");
+        // Do not fetch initial data if we already have any data:
+        if (this.props.wheelSearchData === "") {
+            this.props.getDataFromApi("/api/wheels", "WHEELS_INITIAL");
+        }
     }
 
     render() {
