@@ -11,6 +11,7 @@ class WheelSearchTable extends Component {
                 { title: "Rim", dbName: "rim" },
                 { title: "Hub", dbName: "hub" },
                 { title: "Side", dbName: "side" },
+                { title: "Size", dbName: "iso_diameter"},
                 { title: "Cross (Non Drive)", dbName: "cross_pattern_nds" },
                 { title: "Cross (Drive)", dbName: "cross_pattern_ds" },
                 { title: "Spoke Length (Non Drive)", dbName: "spoke_length_nds" },
@@ -32,7 +33,7 @@ class WheelSearchTable extends Component {
         } else {
             const tableRows = this.props.wheelSearchData.map((row, index) => {
                 // Destructure the object
-                const { rim, hub, side, cross_pattern_nds, cross_pattern_ds, spoke_length_nds, spoke_length_ds, erd, offset_spoke_bed, hole_count, center_to_left, center_to_right, flange_pcd_nds, flange_pcd_ds, spoke_hole_diameter } = row;
+                const { rim, hub, side, iso_diameter, cross_pattern_nds, cross_pattern_ds, spoke_length_nds, spoke_length_ds, erd, offset_spoke_bed, hole_count, center_to_left, center_to_right, flange_pcd_nds, flange_pcd_ds, spoke_hole_diameter } = row;
 
                 // Auto-calculating the spoke lengths
                 // Temp: Automatically setting the offset to equalize hub spacing. defaults to nds if hub is even.
@@ -54,6 +55,7 @@ class WheelSearchTable extends Component {
                         <td>{rim}</td>
                         <td>{hub}</td>
                         <td>{side}</td>
+                        <td>{iso_diameter}</td>
                         <td>{cross_pattern_nds}</td>
                         <td>{cross_pattern_ds}</td>
                         <td>{displayedSpokeLengthNds}</td>
