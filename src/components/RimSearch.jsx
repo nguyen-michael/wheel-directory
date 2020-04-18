@@ -6,6 +6,9 @@ class RimSearch extends Component {
         if (this.props.rimSearchData === "") {
             this.props.getDataFromApi("/api/rims", "RIMS_INITIAL");
         }
+        if (this.props.rimSearchFacets === "") {
+            this.props.getDataFromApi("/api/rim-facets", "RIMS_FACETS");
+        }
     }
 
     render() {

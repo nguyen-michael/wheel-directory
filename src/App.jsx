@@ -28,7 +28,9 @@ class App extends Component {
             wheelSearchData: "",
             wheelSearchFields: "",
             rimSearchData: "",
-            hubSearchData: ""
+            hubSearchData: "",
+            rimSearchFacets: "",
+            hubSearchFacets: ""
         }
 
         this.handleFormChange = this.handleFormChange.bind(this);
@@ -101,7 +103,7 @@ class App extends Component {
             case "WHEELS_INITIAL":
                 fetchData()
                     .then(data => {
-                        console.log(data);
+                        console.log(name, data);
                         // Use only name string
                         // const fields = data.fields.map(field => field.name);
                         this.setState({
@@ -114,7 +116,7 @@ class App extends Component {
             case "RIMS_INITIAL":
                 fetchData()
                     .then(data => {
-                        console.log(data);
+                        console.log(name, data);
                         this.setState({
                             rimSearchData: data.rows
                         });
@@ -124,9 +126,19 @@ class App extends Component {
             case "HUBS_INITIAL":
                 fetchData()
                     .then(data => {
-                        console.log(data);
+                        console.log(name, data);
                         this.setState({
                             hubSearchData: data.rows
+                        });
+                    })
+                    .catch(err => console.log(err));
+                break;
+            case "RIMS_FACETS":
+                fetchData()
+                    .then(data => {
+                        console.log(name, data);
+                        this.setState({
+                            rimSearchFacets: data.rows
                         });
                     })
                     .catch(err => console.log(err));

@@ -34,5 +34,15 @@ router.get("/hubs", async (req, res) => {
     }
 });
 
+router.get("/rim-facets", async (req, res) => {
+    try {
+        const results = await pool.query("SELECT ARRAY(SELECT DISTINCT(manufacturer) FROM rim) AS manufacturer_values, ARRAY(SELECT DISTINCT(model_name) FROM rim) AS model_name_values FROM rim LIMIT 1");
+        res.json(results);
+    } catch (err) {
+        console.log(err.message);
+        res.status(400).send(err.message);
+    }
+});
+
 module.exports = router;
 
