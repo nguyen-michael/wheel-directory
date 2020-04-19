@@ -5,7 +5,7 @@ const { pool } = require("../dbConfig");
 // Initial Data from wheels, rims hubs
 router.get("/wheels", async (req, res) => {
     try {
-        const results = await pool.query("SELECT wheel.id, rim.iso_diameter, rim.erd, rim.offset_spoke_bed, rim.hole_count, hub.center_to_left, hub.center_to_right, hub.flange_pcd_nds, hub.flange_pcd_ds, hub.hole_count, hub.spoke_hole_diameter, wheel.cross_pattern_nds, wheel.cross_pattern_ds, wheel.spoke_length_nds, wheel.spoke_length_ds, CONCAT(rim.manufacturer, ' ', rim.model_name) AS rim, CONCAT(hub.manufacturer, ' ', hub.model_name) AS hub, hub.side FROM wheel INNER JOIN rim ON wheel.rim_id = rim.id INNER JOIN hub ON wheel.hub_id = hub.id");
+        const results = await pool.query("SELECT * FROM wheel_complete");
         // const results = await pool.query("SELECT *, pg_sleep(10) from wheel where id = 23234342");
         res.json(results);
     } catch (err) {
